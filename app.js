@@ -14,17 +14,27 @@ const itemController = (() => {
 
   // Data Structure
 
-  const items = [];
+  const items = [
+    {id: 0, name: 'meal 1', calories: 100},
+    {id: 1, name: 'meal 2', calories: 200},
+    {id: 2, name: 'meal 3', calories: 300}
+  ];
 
   return {
     // Creates the item with the given parameters from app controller
-    item: function(id, name, calories) {
-      let newItem = new Item(id, name, calories);
+    item: function(name, calories) {
+      let id = items.length;
+      let newItem = new Item(id, name, parseInt(calories));
       return newItem
     },
     // Pushes item to data structure
     items: function(item) {
       items.push(item);
+      console.log(items.length);
+      console.log(items);
+    },
+    dataStructure: function() {
+      return items
     }
   }
 
@@ -59,10 +69,19 @@ const UIController = (() => {
       ul.innerHTML += li;
   }
 
+  const totalCalories = () => {
+    const caloriesDiv = document.querySelector('.total-calories');
+    let calories = 160;
+    caloriesDiv.innerHTML = calories;
+  }
+
   return {
     UISelectors: UISelectors,
     displayItems: function(item, calories) {
       displayItems(item, calories);
+    },
+    getTotal: function() {
+      return totalCalories()
     }
   }
   
@@ -78,21 +97,24 @@ const App = ((itemController, UIController) => {
 
   function loadEventListeners() {
 
-    addBtn.addEventListener('click', () => {
+    addBtn.addEventListener('click', (e) => {
+
       // Grab item and calorie values
       const item = document.querySelector(loadUISelectors.itemName).value;
       const calories = document.querySelector(loadUISelectors.itemCalories).value;
       // Check for user input
       if(item !== '' && calories !== '') {
-        // Create the item object from the above values
-        const createdItem = itemController.item(0, item,calories);
-        itemController.items(createdItem);
-        // Display the created item in the UI
-        UIController.displayItems(createdItem.name, createdItem.calories);
-      } else {
-        console.log('Please Enter Values..');
-      }
-      
+          // Create the item object from the above values
+          const createdItem = itemController.item(item, calories);
+          itemController.items(createdItem);
+          // Display the created item in the UI
+          UIController.displayItems(createdItem.name, createdItem.calories);
+          UIController.getTotal();
+        } else {
+          console.log('Please Enter Values..');
+        }
+
+      e.preventDefault();
     });
 
   }
