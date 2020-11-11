@@ -69,10 +69,18 @@ const UIController = (() => {
       ul.innerHTML += li;
   }
 
+  let itemCalories = [];
+
   const totalCalories = () => {
     const caloriesDiv = document.querySelector('.total-calories');
-    let calories = 160;
-    caloriesDiv.innerHTML = calories;
+    
+    let total = 0;
+    for(let i = 0; i < itemCalories.length; i++) {
+      total += itemCalories[i];
+    }
+    
+    caloriesDiv.innerHTML = total;
+    
   }
 
   return {
@@ -80,8 +88,9 @@ const UIController = (() => {
     displayItems: function(item, calories) {
       displayItems(item, calories);
     },
-    getTotal: function() {
-      return totalCalories()
+    getTotal: function(calories) {
+      itemCalories.push(calories);
+      totalCalories();
     }
   }
   
@@ -101,18 +110,19 @@ const App = ((itemController, UIController) => {
 
       // Grab item and calorie values
       const item = document.querySelector(loadUISelectors.itemName).value;
-      const calories = document.querySelector(loadUISelectors.itemCalories).value;
+      const calories = parseInt(document.querySelector(loadUISelectors.itemCalories).value);
       // Check for user input
-      if(item !== '' && calories !== '') {
-          // Create the item object from the above values
-          const createdItem = itemController.item(item, calories);
-          itemController.items(createdItem);
-          // Display the created item in the UI
-          UIController.displayItems(createdItem.name, createdItem.calories);
-          UIController.getTotal();
-        } else {
-          console.log('Please Enter Values..');
-        }
+      if(item !== '' && calories !== '' && !isNaN(calories)) {
+        // Create the item object from the above values
+        const createdItem = itemController.item(item, calories);
+        itemController.items(createdItem);
+        // Display the created item in the UI
+        UIController.displayItems(createdItem.name, createdItem.calories);
+        // Add the item calories Total
+        UIController.getTotal(createdItem.calories);
+      } else {
+        console.log('Please Enter Values Correctly..');
+      }
 
       e.preventDefault();
     });
