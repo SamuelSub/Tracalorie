@@ -60,6 +60,9 @@ const itemController = (() => {
 const UIController = (() => {
 
   const UISelectors = {
+    backBtn: '#back-btn',
+    updateMeal: '.update-meal',
+    addBtn: '#add-btn',
     itemName: '#item-name',
     itemCalories: '#item-calories',
     itemList: '#item-list',
@@ -81,6 +84,21 @@ const UIController = (() => {
       // Display the list item in the UI
       const ul = document.querySelector(UISelectors.itemList);
       ul.innerHTML += li;
+  }
+
+  const updateItem = function(update) {
+    if(update) {
+      let addBtn = document.querySelector(UISelectors.addBtn).style.display = 'none';
+      const updateUI = `
+      <button class="update-btn btn orange"><i class="fa fa-pencil-square-o"></i> Update Meal</button>
+      <button class="delete-btn btn red"><i class="fa fa-remove"></i> Delete Meal</button>`;
+      let updateMeal = document.querySelector(UISelectors.updateMeal).innerHTML = updateUI;
+      updateMeal = document.querySelector(UISelectors.updateMeal).style.display = 'block';
+    } else {
+      addBtn = document.querySelector(UISelectors.addBtn).style.display = 'block';
+      updateMeal = document.querySelector(UISelectors.updateMeal).style.display = 'none';
+    }
+    
   }
 
   let itemCalories = [];
@@ -105,6 +123,9 @@ const UIController = (() => {
     getTotal: function(calories) {
       itemCalories.push(calories);
       totalCalories();
+    },
+    update: function(update, back) {
+      updateItem(update, back);
     }
   }
   
@@ -134,6 +155,8 @@ const App = ((itemController, UIController) => {
         UIController.displayItems(createdItem.id, createdItem.name, createdItem.calories);
         // Add the item calories Total
         UIController.getTotal(createdItem.calories);
+        document.querySelector(loadUISelectors.itemName).value = '';
+        document.querySelector(loadUISelectors.itemCalories).value = '';
       } else {
         console.log('Please Enter Values Correctly..');
       }
@@ -141,16 +164,24 @@ const App = ((itemController, UIController) => {
       e.preventDefault();
     });
 
+    // Edit icon click event
     ul.addEventListener('click', (e) => {
       if(e.target.id === loadUISelectors.editIcon) {
         const editID = itemController.editItem(e.target.parentNode.parentNode.id);
         document.querySelector(loadUISelectors.itemName).value = editID.name;
         document.querySelector(loadUISelectors.itemCalories).value = editID.calories;
+        UIController.update(true);
       }
     
     })
-    
 
+    // Back button event listener
+
+    const backBtn = document.querySelector(loadUISelectors.backBtn);
+    
+    backBtn.addEventListener('click', () => {
+      UIController.update(false);
+    })
   }
 
   const loadUISelectors = UIController.UISelectors;

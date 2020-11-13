@@ -30,7 +30,7 @@
       <div class="card-content">
         <span class="card-title">Add Meal / Food Item</span>
         <form class="col">
-          <div class="row">
+          <div id="input-fields" class="row">
             <div class="input-field col s6">
               <input type="text" placeholder="Add Item" id="item-name">
               <label for="item-name">Meal</label>
@@ -39,12 +39,13 @@
                 <input type="text" placeholder="Add Calories" id="item-calories">
                 <label for="item-calories">Calories</label>
             </div>
-            <button class="add-btn btn blue darken-3"><i class="fa fa-plus"></i> Add Meal</button>
+            <button id="add-btn" class="add-btn btn blue darken-3"><i class="fa fa-plus"></i> Add Meal</button>
+            <div class="update-meal"></div>
             <!--
             <button class="update-btn btn orange"><i class="fa fa-pencil-square-o"></i> Update Meal</button>
             <button class="delete-btn btn red"><i class="fa fa-remove"></i> Delete Meal</button>
             -->
-            <button class="back-btn btn grey pull-right"><i class="fa fa-chevron-circle-left"></i> Back</button>
+            <button id="back-btn" class="back-btn btn grey pull-right"><i class="fa fa-chevron-circle-left"></i> Back</button>
           </div>
         </form>
       </div>
