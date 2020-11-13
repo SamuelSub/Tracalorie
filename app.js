@@ -20,12 +20,12 @@ const itemController = (() => {
     {id: 2, name: 'meal 3', calories: 300}
   ];
 
+  let editID = {};
   const editItem = function(listItemID) {
 
     for(let i = 0; i < items.length; i++) {
       if(parseInt(listItemID[5]) === parseInt(items[i].id)) {
-        // console.log(`list id is: ${listItemID} and items is: ${items[i].id}`);
-        const editedItem = items[i].id;
+        editID = items[i];
       }
     }
   }
@@ -46,7 +46,7 @@ const itemController = (() => {
     },
     editItem: function(listItemID) {
       editItem(listItemID);
-      
+      return editID
     }
   }
  
@@ -143,7 +143,9 @@ const App = ((itemController, UIController) => {
 
     ul.addEventListener('click', (e) => {
       if(e.target.id === loadUISelectors.editIcon) {
-        itemController.editItem(e.target.parentNode.parentNode.id);
+        const editID = itemController.editItem(e.target.parentNode.parentNode.id);
+        document.querySelector(loadUISelectors.itemName).value = editID.name;
+        document.querySelector(loadUISelectors.itemCalories).value = editID.calories;
       }
     
     })
@@ -157,12 +159,6 @@ const App = ((itemController, UIController) => {
 
   // Selects the ul and uses event.target to find the edit icon
   const ul = document.querySelector('.collection');
-
-  
-  
-  
-
-  
 
   loadEventListeners();
 })(itemController, UIController);
