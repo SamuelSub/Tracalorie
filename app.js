@@ -65,7 +65,6 @@ const itemController = (() => {
     },
     updateItem: function(id, dataName, dataCalories) {
       updateItem(id, dataName, parseInt(dataCalories));
-      console.log(items)
     }
   }
  
@@ -115,6 +114,7 @@ const UIController = (() => {
       ul.innerHTML += li;
   }
 
+  // Show or hide update and delete button
   const updateItem = function(update) {
     if(update) {
       let addBtn = document.querySelector(UISelectors.addBtn).style.display = 'none';
@@ -130,6 +130,19 @@ const UIController = (() => {
       document.querySelector(UISelectors.itemCalories).value = '';
     }
     
+  }
+
+  // Called from the update button event listener and get the id of the item clicked from the variable editID
+  const changeListItem = function(ID, itemName, itemCalories) {
+    const listItem = document.querySelector(`#item-${ID}`);
+    listItem.innerHTML = `
+        <strong>${itemName}: </strong> <em>${itemCalories}: Calories</em>
+        <a href="#" class="secondary-content">
+          <i id="edit-icon" class="fa fa-pencil"></i>
+        </a>
+    `;
+    document.querySelector(UISelectors.itemName).value = '';
+    document.querySelector(UISelectors.itemCalories).value = '';
   }
 
   let itemCalories = [];
@@ -160,6 +173,9 @@ const UIController = (() => {
     },
     clearAll: function() {
       clearAll();
+    },
+    changeListItem: function(ID, itemName, itemCalories) {
+      changeListItem(ID, itemName, itemCalories);
     }
   }
   
@@ -226,8 +242,8 @@ const App = ((itemController, UIController) => {
     // Added event listener to parent element for the update button
     inputFields.addEventListener('click', (e) => {
       if(`#${e.target.id}` === loadUISelectors.updateBtn) {
-        console.log(editID.id);
         itemController.updateItem(editID.id, document.querySelector(loadUISelectors.itemName).value, document.querySelector(loadUISelectors.itemCalories).value);
+        UIController.changeListItem(editID.id, document.querySelector(loadUISelectors.itemName).value, document.querySelector(loadUISelectors.itemCalories).value);
       }
     })
   }
