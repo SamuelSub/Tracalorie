@@ -15,9 +15,9 @@ const itemController = (() => {
   // Data Structure
 
   const items = [
-    {id: 0, name: 'meal 1', calories: 100},
-    {id: 1, name: 'meal 2', calories: 200},
-    {id: 2, name: 'meal 3', calories: 300}
+    // {id: 0, name: 'meal 1', calories: 100},
+    // {id: 1, name: 'meal 2', calories: 200},
+    // {id: 2, name: 'meal 3', calories: 300}
   ];
 
   let editID = {};
@@ -26,6 +26,17 @@ const itemController = (() => {
     for(let i = 0; i < items.length; i++) {
       if(parseInt(listItemID[5]) === parseInt(items[i].id)) {
         editID = items[i];
+      }
+    }
+  }
+
+  // Update the item data
+
+  const updateItem = function(id, dataName, dataCalories) {
+    for(let i = 0; i < items.length; i++) {
+      if(items[i].id === id) {
+        items[i].name = dataName;
+        items[i].calories = dataCalories;
       }
     }
   }
@@ -47,6 +58,10 @@ const itemController = (() => {
     editItem: function(listItemID) {
       editItem(listItemID);
       return editID
+    },
+    updateItem: function(id, dataName, dataCalories) {
+      updateItem(id, dataName, parseInt(dataCalories));
+      console.log(items)
     }
   }
  
@@ -60,13 +75,16 @@ const itemController = (() => {
 const UIController = (() => {
 
   const UISelectors = {
+    deleteBtn: '#delete-btn',
+    updateBtn: '#update-btn',
     backBtn: '#back-btn',
     updateMeal: '.update-meal',
     addBtn: '#add-btn',
     itemName: '#item-name',
     itemCalories: '#item-calories',
     itemList: '#item-list',
-    editIcon: 'edit-icon'
+    editIcon: 'edit-icon',
+    inputFields: '#input-fields'
   }
 
   const displayItems = (id, item, calories) => {
@@ -90,8 +108,8 @@ const UIController = (() => {
     if(update) {
       let addBtn = document.querySelector(UISelectors.addBtn).style.display = 'none';
       const updateUI = `
-      <button class="update-btn btn orange"><i class="fa fa-pencil-square-o"></i> Update Meal</button>
-      <button class="delete-btn btn red"><i class="fa fa-remove"></i> Delete Meal</button>`;
+      <button id="update-btn" class="update-btn btn orange"><i class="fa fa-pencil-square-o"></i> Update Meal</button>
+      <button id="delete-btn" class="delete-btn btn red"><i class="fa fa-remove"></i> Delete Meal</button>`;
       let updateMeal = document.querySelector(UISelectors.updateMeal).innerHTML = updateUI;
       updateMeal = document.querySelector(UISelectors.updateMeal).style.display = 'block';
     } else {
@@ -165,14 +183,14 @@ const App = ((itemController, UIController) => {
     });
 
     // Edit icon click event
+    let editID;
     ul.addEventListener('click', (e) => {
       if(e.target.id === loadUISelectors.editIcon) {
-        const editID = itemController.editItem(e.target.parentNode.parentNode.id);
+        editID = itemController.editItem(e.target.parentNode.parentNode.id);
         document.querySelector(loadUISelectors.itemName).value = editID.name;
         document.querySelector(loadUISelectors.itemCalories).value = editID.calories;
         UIController.update(true);
       }
-    
     })
 
     // Back button event listener
@@ -182,14 +200,24 @@ const App = ((itemController, UIController) => {
     backBtn.addEventListener('click', () => {
       UIController.update(false);
     })
+
+    // Added event listener to parent element for the update button
+    inputFields.addEventListener('click', (e) => {
+      if(`#${e.target.id}` === loadUISelectors.updateBtn) {
+        console.log(editID.id);
+        itemController.updateItem(editID.id, document.querySelector(loadUISelectors.itemName).value, document.querySelector(loadUISelectors.itemCalories).value);
+      }
+    })
   }
 
+  
   const loadUISelectors = UIController.UISelectors;
   
   const addBtn = document.querySelector('.add-btn');
+  const inputFields = document.querySelector(loadUISelectors.inputFields);
 
   // Selects the ul and uses event.target to find the edit icon
   const ul = document.querySelector('.collection');
-
   loadEventListeners();
+  
 })(itemController, UIController);
