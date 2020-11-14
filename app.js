@@ -1,5 +1,9 @@
 // Storage Controller
 
+const storageController = (() => {
+
+})();
+
 // Item Controller 
 
 const itemController = (() => {
@@ -75,6 +79,7 @@ const itemController = (() => {
 const UIController = (() => {
 
   const UISelectors = {
+    clearAllBtn: '#clear-all',
     deleteBtn: '#delete-btn',
     updateBtn: '#update-btn',
     backBtn: '#back-btn',
@@ -85,6 +90,12 @@ const UIController = (() => {
     itemList: '#item-list',
     editIcon: 'edit-icon',
     inputFields: '#input-fields'
+  }
+
+  const clearAll = () => {
+    document.querySelector(UISelectors.itemName).value = '';
+    document.querySelector(UISelectors.itemCalories).value = '';
+    document.querySelector(UISelectors.itemList).innerHTML = '';
   }
 
   const displayItems = (id, item, calories) => {
@@ -146,6 +157,9 @@ const UIController = (() => {
     },
     update: function(update, back) {
       updateItem(update, back);
+    },
+    clearAll: function() {
+      clearAll();
     }
   }
   
@@ -203,6 +217,12 @@ const App = ((itemController, UIController) => {
       UIController.update(false);
     })
 
+    // Clear all button
+
+    clearAllBtn.addEventListener('click', () => {
+      UIController.clearAll();
+    })
+
     // Added event listener to parent element for the update button
     inputFields.addEventListener('click', (e) => {
       if(`#${e.target.id}` === loadUISelectors.updateBtn) {
@@ -214,7 +234,7 @@ const App = ((itemController, UIController) => {
 
   
   const loadUISelectors = UIController.UISelectors;
-  
+  const clearAllBtn = document.querySelector(loadUISelectors.clearAllBtn);
   const addBtn = document.querySelector('.add-btn');
   const inputFields = document.querySelector(loadUISelectors.inputFields);
 
