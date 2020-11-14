@@ -115,6 +115,8 @@ const UIController = (() => {
     } else {
       addBtn = document.querySelector(UISelectors.addBtn).style.display = 'block';
       updateMeal = document.querySelector(UISelectors.updateMeal).style.display = 'none';
+      document.querySelector(UISelectors.itemName).value = '';
+      document.querySelector(UISelectors.itemCalories).value = '';
     }
     
   }
